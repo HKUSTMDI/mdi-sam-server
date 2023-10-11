@@ -6,7 +6,8 @@ from uuid import uuid4
 from sam_predictor import SAMPredictor
 from label_studio_ml_mdi.model import LabelStudioMLBase
 
-SAM_CHOICE = os.environ.get("SAM_CHOICE", "MobileSAM")  # other option is just SAM
+#SAM_CHOICE = os.environ.get("SAM_CHOICE", "MobileSAM")  # other option is just SAM
+SAM_CHOICE = os.environ.get("SAM_CHOICE", "SAM")  # other option is just SAM
 PREDICTOR = SAMPredictor(SAM_CHOICE)
 
 
@@ -53,13 +54,14 @@ class SamMLBackend(LabelStudioMLBase):
         predictions = self.get_results(
             masks=predictor_results['masks'],
             probs=predictor_results['probs'],
+            bbox=predictor_results['bbox'],
             width=image_width,
             height=image_height,
             label=selected_label)
 
         return predictions
 
-    def get_results(self, masks, probs, width, height, label):
+    def get_results(self, masks, probs, width, height, bbox, label):
         results = []
         for mask, prob in zip(masks, probs):
             # creates a random ID for your label everytime so no chance for errors
@@ -76,6 +78,7 @@ class SamMLBackend(LabelStudioMLBase):
                 'value': {
                     'format': 'rle',
                     'rle': rle,
+                    'bbox': bbox,
                     'brushlabels': [label],
                 },
                 'score': prob,

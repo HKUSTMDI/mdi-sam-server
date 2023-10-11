@@ -7,9 +7,12 @@ import numpy as np
 from typing import List, Dict, Optional
 from label_studio_ml.utils import get_image_local_path, InMemoryLRUDictCache
 
+import matplotlib.pyplot as plt
+import uuid
+
 logger = logging.getLogger(__name__)
 
-VITH_CHECKPOINT = os.environ.get("VITH_CHECKPOINT", "../model/sam_vit_h_4b8939.pth")
+VITH_CHECKPOINT = os.environ.get("VITH_CHECKPOINT", "../model/sam_vit_b_01ec64.pth")
 ONNX_CHECKPOINT = os.environ.get("ONNX_CHECKPOINT", "../model/sam_onnx_quantized_example.onnx")
 MOBILESAM_CHECKPOINT = os.environ.get("MOBILESAM_CHECKPOINT", "../model/mobile_sam.pt")
 LABEL_STUDIO_ACCESS_TOKEN = os.environ.get("LABEL_STUDIO_ACCESS_TOKEN")
@@ -55,7 +58,7 @@ class SAMPredictor(object):
                 raise FileNotFoundError("VITH_CHECKPOINT is not set: please set it to the path to the SAM checkpoint")
 
             logger.info(f"Using SAM checkpoint {self.model_checkpoint}")
-            reg_key = "vit_h"
+            reg_key = "vit_b"
 
         elif model_choice == 'MobileSAM':
             from mobile_sam import SamPredictor, sam_model_registry
@@ -89,6 +92,7 @@ class SAMPredictor(object):
             image = cv2.imread(image_path)
             image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
             self.predictor.set_image(image)
+
             payload = {'image_shape': image.shape[:2]}
             logger.debug(f'Finished set_image({img_path}) in `IN_MEM_CACHE`: image shape {image.shape[:2]}')
             if calculate_embeddings:
@@ -178,11 +182,31 @@ class SAMPredictor(object):
             # TODO: support multimask output
             multimask_output=False
         )
-        mask = masks[0, :, :].astype(np.uint8)  # each mask has shape [H, W]
+        mask = masks[0].astype(np.uint8)  # each mask has shape [H, W]
+
+        #效果测试、画图
+        #points = point_coords
+        #self.show_mask(points, mask, img_path )
+
+        #计算轮廓
+        contours, hierarchy = cv2.findContours(
+            mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        #计算外接矩形
+        new_contours = []
+        for contour in contours:
+            new_contours.extend(list(contour))
+        new_contours = np.array(new_contours)
+        x, y, w, h = cv2.boundingRect(new_contours)
+        bbox = [x, y, w, h]
+
+
+
+        print("mask_info:",masks)
         prob = float(probs[0])
         return {
             'masks': [mask],
-            'probs': [prob]
+            'probs': [prob],
+            'bbox' : bbox
         }
 
     def predict(
@@ -198,3 +222,45 @@ class SAMPredictor(object):
         else:
             raise NotImplementedError(f"Model choice {self.model_choice} is not supported yet")
 
+
+    def show_mask(self, points, mask, image_path , random_color=True):
+        """
+        mask画图
+        """
+        image_path = get_image_local_path(
+                image_path,
+                label_studio_access_token=LABEL_STUDIO_ACCESS_TOKEN,
+                label_studio_host=LABEL_STUDIO_HOST
+            )
+
+        
+        image = cv2.imread(image_path)
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        if random_color:
+            color = np.concatenate([np.random.random(3), np.array([0.6])], axis=0)
+        else:
+            color = np.array([30/255, 144/255, 255/255, 0.6])
+
+        mask_image_array = np.array(mask)
+        h, w = mask_image_array.shape[-2:]
+        mask_image_ins = mask_image_array.reshape(h, w, 1) * color.reshape(1, 1, -1)
+        id = str(uuid.uuid4())[:6]
+        #画图
+        plt.figure(figsize=(10,10))
+        plt.imshow(image)
+        plt.imshow(mask_image_ins)
+        #标注点
+        plt.scatter(points[:,0],points[:,1], s=100, color='red',marker='*')
+        plt.axis('off')
+        plt.savefig(f"./test_image/mask_{id}")
+
+
+
+if __name__ == "__main__":
+    predicater = SAMPredictor('SAM')
+    input_point = np.array([[500, 375]])
+    input_label = np.array([1])
+    mask        = np.array([[1, 1]])
+
+    url = './test_image/truck.jpg'
+    predicater.show_mask(input_point, mask, url)
