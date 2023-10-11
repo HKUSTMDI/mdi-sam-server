@@ -6,7 +6,16 @@ from .model import LabelStudioMLBase
 from .exceptions import exception_handler
 
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("api")
+logger.setLevel(logging.DEBUG)
+
+# log_formatter = '%(asctime)s [%(levelname)s] [%(filename)s] [line:%(lineno)d] %(message)s'
+# stream_handler = logging.StreamHandler()
+# stream_handler.setFormatter(logging.Formatter(log_formatter))
+# stream_handler.setLevel(logging.DEBUG)
+
+# logger.addHandler(stream_handler)
+
 
 _server = Flask(__name__)
 MODEL_CLASS = LabelStudioMLBase
@@ -14,11 +23,13 @@ MODEL_CLASS = LabelStudioMLBase
 
 def init_app(model_class):
     global MODEL_CLASS
-
+    print("init")
+    
     if not issubclass(model_class, LabelStudioMLBase):
         raise ValueError('Inference class should be the subclass of ' + LabelStudioMLBase.__class__.__name__)
 
     MODEL_CLASS = model_class
+    logger.debug("init ok")
     return _server
 
 
@@ -47,9 +58,9 @@ def _predict():
     data = request.json
     tasks = data.get('tasks')
     params = data.get('params') or {}
-    project = data.get('project')
+    project = data.get('task_id')
     if project:
-        project_id = data.get('project').split('.', 1)[0]
+        project_id = data.get('task_id').split('.', 1)[0]
     else:
         project_id = None
     label_config = data.get('label_config')
@@ -66,7 +77,7 @@ def _predict():
 @exception_handler
 def _setup():
     data = request.json
-    project_id = data.get('project').split('.', 1)[0]
+    project_id = data.get('task_id').split('.', 1)[0]
     label_config = data.get('schema')
     model = MODEL_CLASS(project_id)
     model.use_label_config(label_config)
@@ -81,36 +92,15 @@ TRAIN_EVENTS = (
     'PROJECT_UPDATED'
 )
 
-
-@_server.route('/webhook', methods=['POST'])
-def webhook():
-    data = request.json
-    event = data.pop('action')
-    if event not in TRAIN_EVENTS:
-        return jsonify({'status': 'Unknown event'}), 200
-    project_id = str(data['project']['id'])
-    label_config = data['project']['label_config']
-    model = MODEL_CLASS(project_id)
-    model.use_label_config(label_config)
-    model.fit(event, data)
-    return jsonify({}), 201
-
-
 @_server.route('/health', methods=['GET'])
 @_server.route('/', methods=['GET'])
 @exception_handler
 def health():
     return jsonify({
-        'status': 'UP',
+        'code': 200,
+        'msg': 'ok',
         'model_class': MODEL_CLASS.__name__
     })
-
-
-@_server.route('/metrics', methods=['GET'])
-@exception_handler
-def metrics():
-    return jsonify({})
-
 
 @_server.errorhandler(FileNotFoundError)
 def file_not_found_error_handler(error):

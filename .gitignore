@@ -1,1 +1,7 @@
+__pycache__/
 src/model/*
+src/sam_backend/cache.db
+
+cache
+
+.pytest_cache/

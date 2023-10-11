@@ -34,6 +34,7 @@ class LabelStudioMLBase(ABC):
         """
         :param cache:
         """
+        print("init!!")
         self.project_id = project_id or ''
 
     def use_label_config(self, label_config: str):

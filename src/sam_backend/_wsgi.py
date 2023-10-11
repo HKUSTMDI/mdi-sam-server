@@ -14,13 +14,13 @@ logging.config.dictConfig({
   "handlers": {
     "console": {
       "class": "logging.StreamHandler",
-      "level": os.getenv('LOG_LEVEL', 'INFO'),
+      "level": os.getenv('LOG_LEVEL', 'DEBUG'),
       "stream": "ext://sys.stdout",
       "formatter": "standard"
     }
   },
   "root": {
-    "level": os.getenv('LOG_LEVEL', 'INFO'),
+    "level": os.getenv('LOG_LEVEL', 'DEBUG'),
     "handlers": [
       "console"
     ],
@@ -28,7 +28,9 @@ logging.config.dictConfig({
   }
 })
 
-from label_studio_ml.api import init_app
+import sys
+sys.path.append('../')
+from label_studio_ml_mdi.api import init_app
 from model import SamMLBackend
 
 _DEFAULT_CONFIG_PATH = os.path.join(os.path.dirname(__file__), 'config.json')

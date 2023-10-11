@@ -27,7 +27,7 @@ class SAMPredictor(object):
         #   before making predictions
         #   to extend it to >1 image, we need to store the "active image" state in the cache
         #self.cache = InMemoryLRUDictCache(1)
-        self.cache = InMemoryLRUDictCache(2)
+        self.cache = InMemoryLRUDictCache(10)
 
         # if you're not using CUDA, use "cpu" instead .... good luck not burning your computer lol
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -63,7 +63,7 @@ class SAMPredictor(object):
             self.model_checkpoint = MOBILESAM_CHECKPOINT
             if not self.model_checkpoint:
                 raise FileNotFoundError("MOBILE_CHECKPOINT is not set: please set it to the path to the MobileSAM checkpoint")
-            logger.info(f"Using MobileSAM checkpoint {self.model_checkpoint}")
+            logger.info(f"Using MobileSAM checkpoint: {self.model_checkpoint}")
             reg_key = 'vit_t'
         else:
             raise ValueError(f"Invalid model choice {model_choice}")
