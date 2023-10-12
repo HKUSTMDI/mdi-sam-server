@@ -23,7 +23,6 @@ MODEL_CLASS = LabelStudioMLBase
 
 def init_app(model_class):
     global MODEL_CLASS
-    print("init")
     
     if not issubclass(model_class, LabelStudioMLBase):
         raise ValueError('Inference class should be the subclass of ' + LabelStudioMLBase.__class__.__name__)
@@ -39,19 +38,6 @@ def _predict():
     """
     Predict tasks
 
-    Example request:
-    request = {
-            'tasks': tasks,
-            'model_version': model_version,
-            'project': '{project.id}.{int(project.created_at.timestamp())}',
-            'label_config': project.label_config,
-            'params': {
-                'login': project.task_data_login,
-                'password': project.task_data_password,
-                'context': context,
-            },
-        }
-
     @return:
     Predictions in LS format
     """
@@ -60,7 +46,7 @@ def _predict():
     params = data.get('params') or {}
     project = data.get('task_id')
     if project:
-        project_id = data.get('task_id').split('.', 1)[0]
+        project_id = data.get('task_id')
     else:
         project_id = None
     label_config = data.get('label_config')
@@ -77,7 +63,7 @@ def _predict():
 @exception_handler
 def _setup():
     data = request.json
-    project_id = data.get('task_id').split('.', 1)[0]
+    project_id = data.get('task_id')
     label_config = data.get('schema')
     model = MODEL_CLASS(project_id)
     model.use_label_config(label_config)

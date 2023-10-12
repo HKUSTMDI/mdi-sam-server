@@ -1,6 +1,8 @@
-__pycache__/
+*__pycache__*
 src/model/*
 src/sam_backend/cache.db
+src/sam_backend/test_image
+*.py[cod]
 
 cache
 

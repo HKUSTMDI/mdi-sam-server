@@ -68,6 +68,9 @@ if __name__ == "__main__":
     parser.add_argument(
         '--check', dest='check', action='store_true',
         help='Validate model instance before launching server')
+    parser.add_argument(
+        '--draw-image', dest='draw-image', action='store_true',
+        help='draw image and store in ./test_image')
 
     args = parser.parse_args()
 

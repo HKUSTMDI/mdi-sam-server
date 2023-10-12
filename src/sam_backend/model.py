@@ -121,31 +121,3 @@ if __name__ == '__main__':
     import json
     results[0]['result'][0]['value']['rle'] = f'...{len(results[0]["result"][0]["value"]["rle"])} integers...'
     print(json.dumps(results, indent=2))
-
-
-    # model2 = SamMLBackend('2')
-    # results2 = model2.predict(
-    #     tasks=[{
-    #         'data': {
-    #             'image': 'https://img.ibingli.cn/signature/CMWGTUhghiTnTpwd.jpg'
-    #         }}],
-    #     context={
-    #         'result': [{
-    #             'original_width': 3840,
-    #             'original_height': 2160,
-    #             'image_rotation': 0,
-    #             'value': {
-    #                 'x': 49.441786283891545,
-    #                 'y': 59.96810207336522,
-    #                 'width': 0.3189792663476874,
-    #                 'labels': ['Banana'],
-    #                 'keypointlabels': ['Banana']
-    #             },
-    #             'is_positive': True,
-    #             'id': 'fBWv1t0S2L1',
-    #             'type': 'keypointlabels',
-    #             'origin': 'manual'
-    #         }]}
-    # )
-    # results2[0]['result'][0]['value']['rle'] = f'...{len(results[0]["result"][0]["value"]["rle"])} integers...'
-    # print(json.dumps(results2, indent=2))

@@ -186,7 +186,7 @@ class SAMPredictor(object):
 
         #效果测试、画图
         #points = point_coords
-        #self.show_mask(points, mask, img_path )
+        #self.show_mask(points, point_labels, mask, img_path, bbox= input_box )
 
         #计算轮廓
         contours, hierarchy = cv2.findContours(
@@ -223,17 +223,18 @@ class SAMPredictor(object):
             raise NotImplementedError(f"Model choice {self.model_choice} is not supported yet")
 
 
-    def show_mask(self, points, mask, image_path , random_color=True):
+    def show_mask(self, points, labels, mask, image_path , bbox=None, random_color=True , local_test=False):
         """
         mask画图
         """
-        image_path = get_image_local_path(
-                image_path,
-                label_studio_access_token=LABEL_STUDIO_ACCESS_TOKEN,
-                label_studio_host=LABEL_STUDIO_HOST
-            )
+        import matplotlib.patches as mpatches
+        if not local_test:
+            image_path = get_image_local_path(
+                    image_path,
+                    label_studio_access_token=LABEL_STUDIO_ACCESS_TOKEN,
+                    label_studio_host=LABEL_STUDIO_HOST
+                )
 
-        
         image = cv2.imread(image_path)
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         if random_color:
@@ -247,20 +248,32 @@ class SAMPredictor(object):
         id = str(uuid.uuid4())[:6]
         #画图
         plt.figure(figsize=(10,10))
+        #画标注点
+        if labels is not None:
+            pos_points = points[labels==1]
+            neg_points = points[labels==0]
+            plt.scatter(pos_points[:,0],pos_points[:,1], s=100, color='green',marker='*')
+            plt.scatter(neg_points[:,0],neg_points[:,1], s=100, color='red',marker='*')
+        #画框
+        if bbox is not None:
+            x0 = bbox[0]
+            y0 = bbox[1]
+            w, h = bbox[2] - bbox[0], bbox[3] - bbox[1]
+            plt.gca().add_patch(mpatches.Rectangle((x0, y0), w, h, edgecolor='green', facecolor=(0,0,0,0), lw=2))
+
         plt.imshow(image)
         plt.imshow(mask_image_ins)
-        #标注点
-        plt.scatter(points[:,0],points[:,1], s=100, color='red',marker='*')
-        plt.axis('off')
+        #plt.axis('off')
         plt.savefig(f"./test_image/mask_{id}")
 
 
 
 if __name__ == "__main__":
     predicater = SAMPredictor('SAM')
-    input_point = np.array([[500, 375]])
-    input_label = np.array([1])
+    input_point = np.array([[500, 375],[500,475]])
+    input_box = [500, 375, 600, 475]
+    input_label = np.array([1,0])
     mask        = np.array([[1, 1]])
 
     url = './test_image/truck.jpg'
-    predicater.show_mask(input_point, mask, url)
+    predicater.show_mask(input_point, input_label, mask, url, bbox=input_box, local_test=True)
