@@ -12,7 +12,7 @@ MDI标注平台 SAM实时识别server⚡️。
   <strong>rectangle模式</strong>
 
   <img src="./docs/demo_rectangle1.jpg" width="37.25%" />
-  <img src="./docs/demo_rectangle2.jpg" width="37.25%" />
+  <img src="./docs/demo_rectangle2.jpg" width="37.25%" float='left'/>
   
 </p>
 
@@ -40,7 +40,7 @@ task_id|string|是|任务id，用来区别不同task
 [params](#params参数)|json|是|参数
 
 ### tasks参数
-```json
+```shell
 {
     "tasks": [
         {
@@ -54,7 +54,7 @@ task_id|string|是|任务id，用来区别不同task
 
 ### params参数
 
-```json
+```shell
 #keypoint 点模式:
 {   "login": null,
     "password": null,
@@ -110,7 +110,7 @@ task_id|string|是|任务id，用来区别不同task
 Headers:
 Content-Type:application/json;token:test
 ### response
-```json
+```shell
 {
     "results": [
         {
@@ -149,7 +149,7 @@ Content-Type:application/json;token:test
 #### 1.keypoints prompt
 此图传入了3个点，其中2个是positive，1个是negtive.
 + request
-```json
+```shell
 {
     "tasks": [
         {
@@ -213,7 +213,7 @@ Content-Type:application/json;token:test
 }
 ```
 + response
-```json
+```shell
 {
     "results": [
         {
@@ -250,14 +250,13 @@ Content-Type:application/json;token:test
 ```
 效果:
 <p float="left">
-  <img src="./docs/demo1.jpg" width="37.25%" />
+  <img src="./docs/demo_point2.jpg" width="37.25%" />
 </p>
-
 
 #### 2.rectangle prompt
 传入一个矩形，进行分割识别。
 + request
-```json
+```shell
 {
     "tasks": [
         {
@@ -293,7 +292,7 @@ Content-Type:application/json;token:test
 }
 ```
 + response
-```json
+```shell
 {
     "results": [
         {
@@ -331,7 +330,7 @@ Content-Type:application/json;token:test
 
 效果图
 <p float="left">
-  <img src="./docs/demo2.jpg" width="37.25%" />
+  <img src="./docs/demo_rectangle2.jpg" width="37.25%" float='left'/>
 </p>
 
 ## 2.preload 
