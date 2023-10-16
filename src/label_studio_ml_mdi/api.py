@@ -32,7 +32,7 @@ def init_app(model_class):
     return _server
 
 
-@_server.route('/predict', methods=['POST'])
+@_server.route('/api/predict', methods=['POST'])
 @exception_handler
 def _predict():
     """
@@ -59,16 +59,23 @@ def _predict():
     return jsonify({'results': predictions})
 
 
-@_server.route('/setup', methods=['POST'])
+@_server.route('/api/preload', methods=['POST'])
 @exception_handler
 def _setup():
     data = request.json
     project_id = data.get('task_id')
-    label_config = data.get('schema')
+    image_url = data.get('url')
     model = MODEL_CLASS(project_id)
-    model.use_label_config(label_config)
+    model.use_label_config('')
     model_version = model.get('model_version')
-    return jsonify({'model_version': model_version})
+    
+    model.preload(image_url)
+    
+    return jsonify({
+        'code': 200,
+        'msg': 'ok',
+        'model_version': model_version
+        })
 
 
 TRAIN_EVENTS = (
@@ -78,7 +85,7 @@ TRAIN_EVENTS = (
     'PROJECT_UPDATED'
 )
 
-@_server.route('/health', methods=['GET'])
+@_server.route('/api/health', methods=['GET'])
 @_server.route('/', methods=['GET'])
 @exception_handler
 def health():

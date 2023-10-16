@@ -12,9 +12,10 @@ import uuid
 
 logger = logging.getLogger(__name__)
 
-VITH_CHECKPOINT = os.environ.get("VITH_CHECKPOINT", "../model/sam_vit_b_01ec64.pth")
-ONNX_CHECKPOINT = os.environ.get("ONNX_CHECKPOINT", "../model/sam_onnx_quantized_example.onnx")
-MOBILESAM_CHECKPOINT = os.environ.get("MOBILESAM_CHECKPOINT", "../model/mobile_sam.pt")
+VITH_CHECKPOINT = os.environ.get("VITH_CHECKPOINT", "../models/sam_vit_l_0b3195.pth")
+VITH_REG_KEY = os.environ.get("VITH_REG_KEY", "vit_l")
+ONNX_CHECKPOINT = os.environ.get("ONNX_CHECKPOINT", "../models/sam_onnx_quantized_example.onnx")
+MOBILESAM_CHECKPOINT = os.environ.get("MOBILESAM_CHECKPOINT", "../models/mobile_sam.pt")
 LABEL_STUDIO_ACCESS_TOKEN = os.environ.get("LABEL_STUDIO_ACCESS_TOKEN")
 LABEL_STUDIO_HOST = os.environ.get("LABEL_STUDIO_HOST")
 
@@ -30,7 +31,7 @@ class SAMPredictor(object):
         #   before making predictions
         #   to extend it to >1 image, we need to store the "active image" state in the cache
         #self.cache = InMemoryLRUDictCache(1)
-        self.cache = InMemoryLRUDictCache(10)
+        self.cache = InMemoryLRUDictCache(1)
 
         # if you're not using CUDA, use "cpu" instead .... good luck not burning your computer lol
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -48,7 +49,7 @@ class SAMPredictor(object):
             logger.info(f"Using ONNX checkpoint {ONNX_CHECKPOINT} and SAM checkpoint {self.model_checkpoint}")
 
             self.ort = onnxruntime.InferenceSession(ONNX_CHECKPOINT)
-            reg_key = "vit_h"
+            reg_key = VITH_REG_KEY
 
         elif model_choice == 'SAM':
             from segment_anything import SamPredictor, sam_model_registry
@@ -58,7 +59,7 @@ class SAMPredictor(object):
                 raise FileNotFoundError("VITH_CHECKPOINT is not set: please set it to the path to the SAM checkpoint")
 
             logger.info(f"Using SAM checkpoint {self.model_checkpoint}")
-            reg_key = "vit_b"
+            reg_key = VITH_REG_KEY
 
         elif model_choice == 'MobileSAM':
             from mobile_sam import SamPredictor, sam_model_registry
@@ -81,6 +82,7 @@ class SAMPredictor(object):
 
     def set_image(self, img_path, calculate_embeddings=True):
         payload = self.cache.get(img_path)
+        print("payload:",payload)
         if payload is None:
             # Get image and embeddings
             logger.debug(f'Payload not found for {img_path} in `IN_MEM_CACHE`: calculating from scratch')
@@ -174,7 +176,7 @@ class SAMPredictor(object):
         point_coords = np.array(point_coords, dtype=np.float32) if point_coords else None
         point_labels = np.array(point_labels, dtype=np.float32) if point_labels else None
         input_box = np.array(input_box, dtype=np.float32) if input_box else None
-
+        logger.debug("predict...")
         masks, probs, logits = self.predictor.predict(
             point_coords=point_coords,
             point_labels=point_labels,
@@ -186,9 +188,11 @@ class SAMPredictor(object):
 
         #效果测试、画图
         #points = point_coords
+        #logger.debug("画图...")
         #self.show_mask(points, point_labels, mask, img_path, bbox= input_box )
 
         #计算轮廓
+        logger.debug("计算外接轮廓...")
         contours, hierarchy = cv2.findContours(
             mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         #计算外接矩形
@@ -198,10 +202,8 @@ class SAMPredictor(object):
         new_contours = np.array(new_contours)
         x, y, w, h = cv2.boundingRect(new_contours)
         bbox = [x, y, w, h]
-
-
-
-        print("mask_info:",masks)
+        
+        logger.debug("mask_info:")
         prob = float(probs[0])
         return {
             'masks': [mask],
@@ -252,8 +254,8 @@ class SAMPredictor(object):
         if labels is not None:
             pos_points = points[labels==1]
             neg_points = points[labels==0]
-            plt.scatter(pos_points[:,0],pos_points[:,1], s=100, color='green',marker='*')
-            plt.scatter(neg_points[:,0],neg_points[:,1], s=100, color='red',marker='*')
+            plt.scatter(pos_points[:,0],pos_points[:,1], s=150, color='green',marker='*')
+            plt.scatter(neg_points[:,0],neg_points[:,1], s=150, color='red',marker='*')
         #画框
         if bbox is not None:
             x0 = bbox[0]
@@ -264,7 +266,11 @@ class SAMPredictor(object):
         plt.imshow(image)
         plt.imshow(mask_image_ins)
         #plt.axis('off')
-        plt.savefig(f"./test_image/mask_{id}")
+        
+        if not os.path.exists('./draw_image/'):
+            os.mkdir('./draw_image/')
+
+        plt.savefig(f"./draw_image/mask_{id}")
 
 
 

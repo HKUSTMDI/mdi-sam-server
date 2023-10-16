@@ -2,10 +2,18 @@
 MDI标注平台 SAM实时识别server⚡️。
 当前支持:
 - 1.🌟实时标注:多点标注，单矩形标注.
-- 2.🔥带不同positive和negtive的promtp.
+- 2.🔥带不同positive和negative的prompt.
 <p float="left">
-  <img src="./docs/demo1.jpg" width="37.25%" />
-  <img src="./docs/demo2.jpg" width="37.25%" />
+  <strong>point模式</strong>
+  <br>
+  <img src="./docs/demo_point1.jpg" width="37.25%" />
+  <img src="./docs/demo_point2.jpg" width="37.25%" />
+
+  <strong>rectangle模式</strong>
+
+  <img src="./docs/demo_rectangle1.jpg" width="37.25%" />
+  <img src="./docs/demo_rectangle2.jpg" width="37.25%" />
+  
 </p>
 
 
@@ -19,20 +27,20 @@ MDI标注平台 SAM实时识别server⚡️。
 + 说明:请求体采用json方式，请求头中包含token进行验证 
 请求头:Content-Type:application/json;token:xxxx
 ## 1.predict
-- 接口说明: 使用sam模型获取指定url图片的mas。如果url中的图片为经过pre_download下载，将会在本接口重新下载，届时将增加时耗，请先调用pre_download接口下载图片。
-- method:**POST**
-- URL:```${prefix_url}/predict```
+- 接口说明: 使用sam模型获取指定url图片位置的mask。如果url中的图片未经过preload **下载&加载图片进入模型**，届时将增加一定时耗。可先调用preload接口 **下载&加载图片进入模型**。
+- method: **POST**
+- URL: ```${prefix_url}/predict```
 - body
 
 参数名|类型|出现要求|描述
 ---|---|---|---
 [tasks](#tasks参数)|json|是|指定的图片
-model_version|string|否|sam模型类型,默认使用mobile_sam
+model_version|string|否|sam模型类型,默认使用sam_vit_l
 task_id|string|是|任务id，用来区别不同task
 [params](#params参数)|json|是|参数
 
-###tasks参数
-```
+### tasks参数
+```json
 {
     "tasks": [
         {
@@ -46,8 +54,8 @@ task_id|string|是|任务id，用来区别不同task
 
 ### params参数
 
-```
-keypoint 点模式:
+```json
+#keypoint 点模式:
 {   "login": null,
     "password": null,
     "context": {
@@ -102,7 +110,7 @@ keypoint 点模式:
 Headers:
 Content-Type:application/json;token:test
 ### response
-```
+```json
 {
     "results": [
         {
@@ -141,7 +149,7 @@ Content-Type:application/json;token:test
 #### 1.keypoints prompt
 此图传入了3个点，其中2个是positive，1个是negtive.
 + request
-```
+```json
 {
     "tasks": [
         {
@@ -205,7 +213,7 @@ Content-Type:application/json;token:test
 }
 ```
 + response
-```
+```json
 {
     "results": [
         {
@@ -249,7 +257,7 @@ Content-Type:application/json;token:test
 #### 2.rectangle prompt
 传入一个矩形，进行分割识别。
 + request
-```
+```json
 {
     "tasks": [
         {
@@ -285,7 +293,7 @@ Content-Type:application/json;token:test
 }
 ```
 + response
-```
+```json
 {
     "results": [
         {
@@ -326,22 +334,24 @@ Content-Type:application/json;token:test
   <img src="./docs/demo2.jpg" width="37.25%" />
 </p>
 
-## 2.pre_download 
-- 接口说明:在使用sam模型进行自动标注前，前端加载过程中，可调用后端提前下载图片。
+## 2.preload 
+- 接口说明:在使用sam模型进行自动标注前，前端加载过程中，可调用后端提前**下载&加载图片进入模型**。
 - method:**POST,GET**
-- URL:```${prefix_url}/pre_download```
+- URL:```${prefix_url}/preload```
 - body
 
 参数名|类型|出现要求|描述
 ---|---|---|---
 url|string|是|需要预下载图片的url
+task_id|string|是|任务id
 
 ### request
 Headers:
 Content-Type:application/json;token:test
 ```
 {
-  "url":"xxxx"
+  "url":"xxxx",
+  "task_id":"xxxx"
 }
 ```
 ### response

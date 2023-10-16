@@ -41,7 +41,7 @@ class SamMLBackend(LabelStudioMLBase):
                 box_height = ctx['value']['height'] * image_height / 100
                 input_box = [int(x), int(y), int(box_width + x), int(box_height + y)]
 
-        print(f'Point coords are {point_coords}, point labels are {point_labels}, input box is {input_box}')
+        #print(f'Point coords are {point_coords}, point labels are {point_labels}, input box is {input_box}')
 
         img_path = tasks[0]['data']['image']
         predictor_results = PREDICTOR.predict(
@@ -90,7 +90,14 @@ class SamMLBackend(LabelStudioMLBase):
             'result': results,
             'model_version': PREDICTOR.model_name
         }]
-
+    
+    def preload(self, url):
+        if url:
+            try:
+                PREDICTOR.set_image(url, calculate_embeddings=False)
+            except Exception as err:
+                print(f'error info :{err}')
+                raise Exception(f"error info: preload faild!")
 
 if __name__ == '__main__':
     # test the model

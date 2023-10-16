@@ -1,9 +1,10 @@
 *__pycache__*
-src/model/*
+src/models/*
 src/sam_backend/cache.db
 src/sam_backend/test_image
 *.py[cod]
+src/sam_backend/draw_image/*
 
-cache
-
+cache/
 .pytest_cache/
+tools/log/
