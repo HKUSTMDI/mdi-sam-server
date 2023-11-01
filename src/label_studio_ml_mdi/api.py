@@ -4,10 +4,10 @@ from flask import Flask, request, jsonify
 
 from .model import LabelStudioMLBase
 from .exceptions import exception_handler
+from .utils import sdpcHanler,cost_time
 
-
-logger = logging.getLogger("api")
-logger.setLevel(logging.DEBUG)
+logger = logging.getLogger(__name__)
+#logger.setLevel(logging.DEBUG)
 
 # log_formatter = '%(asctime)s [%(levelname)s] [%(filename)s] [line:%(lineno)d] %(message)s'
 # stream_handler = logging.StreamHandler()
@@ -31,9 +31,11 @@ def init_app(model_class):
     logger.debug("init ok")
     return _server
 
+sdpc_handler = sdpcHanler()
 
 @_server.route('/api/predict', methods=['POST'])
 @exception_handler
+@cost_time
 def _predict():
     """
     Predict tasks
@@ -44,18 +46,22 @@ def _predict():
     data = request.json
     tasks = data.get('tasks')
     params = data.get('params') or {}
-    project = data.get('task_id')
-    if project:
-        project_id = data.get('task_id')
-    else:
-        project_id = None
-    label_config = data.get('label_config')
+    project_id = data.get('task_id')
+    img_type = data.get('img_type','normal') #图片类型,sdpc/svs/tiff/normal
     context = params.pop('context', {})
 
     model = MODEL_CLASS(project_id)
-    model.use_label_config(label_config)
+    model.use_label_config('')
 
-    predictions = model.predict(tasks, context=context, **params)
+    if img_type == "normal":
+        predictions = model.predict(tasks, context=context, **params)
+
+    elif img_type == "sdpc":
+        #sdpc处理tasks,context
+        logger.info("convert sdpc...")
+        sdpc_handler.convert(tasks, context=context, **params)
+        predictions = model.predict(tasks, context=context, **params)
+
     return jsonify({'results': predictions})
 
 
@@ -116,12 +122,12 @@ def index_error(error):
 @_server.before_request
 def log_request_info():
     logger.debug('Request headers: %s', request.headers)
-    logger.debug('Request body: %s', request.get_data())
+    logger.info('Request body: %s', request.get_data())
 
 
 @_server.after_request
 def log_response_info(response):
-    logger.debug('Response status: %s', response.status)
+    logger.info('Response status: %s', response.status)
     logger.debug('Response headers: %s', response.headers)
     logger.debug('Response body: %s', response.get_data())
     return response

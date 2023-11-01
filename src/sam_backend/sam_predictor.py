@@ -187,9 +187,9 @@ class SAMPredictor(object):
         mask = masks[0].astype(np.uint8)  # each mask has shape [H, W]
 
         #效果测试、画图
-        #points = point_coords
-        #logger.debug("画图...")
-        #self.show_mask(points, point_labels, mask, img_path, bbox= input_box )
+        points = point_coords
+        logger.debug("画图...")
+        self.show_mask(points, point_labels, mask, img_path, bbox= input_box )
 
         #计算轮廓
         logger.debug("计算外接轮廓...")

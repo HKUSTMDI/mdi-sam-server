@@ -9,3 +9,5 @@ src/sam_backend/draw_image/*
 cache/
 .pytest_cache/
 tools/log/
+temp
+tile_image

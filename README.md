@@ -58,9 +58,10 @@ task_id|string|是|任务id，用来区别不同task
 #keypoint 点模式:
 {   "login": null,
     "password": null,
+    "img_type":"sdpc/svs/tiff/normal", #wsi图片或者普通图片,为空泽默认为normal
     "context": {
         "result": [
-            {
+            {   
                 "original_width": 3840,
                 "original_height": 2160,
                 "image_rotation": 0,
@@ -68,8 +69,10 @@ task_id|string|是|任务id，用来区别不同task
                     "x": 80.3072625698324,
                     "y": 43.67245657568238,
                     "width": 0.27932960893854747,
+                    "cur_scale":0.23,
                     "keypointlabels": ["Banana"]
                 },
+
                 "is_positive": true,
                 "type": "keypointlabels", //类型1:keypointlabels点标注,2:rectanglelabels方框标注
                 "origin": "manual"
@@ -270,6 +273,7 @@ Content-Type:application/json;token:test
     "params": {
         "login": null,
         "password": null,
+        "img_type": "sdpc", #wsi图片专用
         "context": {
             "result": [
                     {
@@ -281,6 +285,7 @@ Content-Type:application/json;token:test
                         "y": 44,
                         "width": 8,
                         "height": 10,
+                        "cur_scale":0.23,#wsi图片专用
                         "rectanglelabels": ["Banana"]
                     },
                     "type": "rectanglelabels",
