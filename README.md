@@ -13,16 +13,15 @@ MDI标注平台 SAM实时识别server⚡️。
   <img src="./docs/demo_point2.jpg" width="37.25%" />
 
   <strong>(2) rectangle模式</strong>
+  <br>
+  <img src="./docs/demo_rectangle1.jpg" width="32%" /> <img src="./docs/demo_rectangle2.jpg" width="32%" />
 
-  <img src="./docs/demo_rectangle1.jpg" width="37.25%" />
-  <img src="./docs/demo_rectangle2.jpg" width="37.25%" float='left'/>
   
   <strong>(3) wsgi标注</strong>
 
-  <img src="./docs/wsgi_demo1.png" width="37.25%" />
-  <img src="./docs/wsgi_demo2.png" width="37.25%" float='left'/>
-  <img src="./docs/wsgi_demo3.png" width="37.25%" />
-  <img src="./docs/wsgi_demo4.png" width="32.6%" />
+  <img src="./docs/wsgi_demo1.png" width="30%" /> <img src="./docs/wsgi_demo2.png" width="30%" />
+  
+  <img src="./docs/wsgi_demo3.png" width="30%" /> <img src="./docs/wsgi_demo4.png" width="26.5%" />
 </p>
 
 
