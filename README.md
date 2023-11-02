@@ -5,8 +5,9 @@ MDI标注平台 SAM实时识别server⚡️。
 - 2.🔥带不同positive和negative的prompt.
 - 3.🐬wsgi识别(框标注)
 
-[point模式](#1.keypoints)
+
 <p float="left">
+  <strong>(1) point模式</strong>
   <br>
   <img src="./docs/demo_point1.jpg" width="37.25%" />
   <img src="./docs/demo_point2.jpg" width="37.25%" />
