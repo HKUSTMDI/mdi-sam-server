@@ -3,7 +3,7 @@ MDI标注平台 SAM实时识别server⚡️。
 当前支持:
 - 1.🌟实时标注:多点标注，单矩形标注.
 - 2.🔥带不同positive和negative的prompt.
-- 3.🐬wsgi识别(框标注)
+- 3.🐬wsgi识别
 
 
 <p float="left">
@@ -14,7 +14,7 @@ MDI标注平台 SAM实时识别server⚡️。
 
   <strong>(2) rectangle模式</strong>
   <br>
-  <img src="./docs/demo_rectangle1.jpg" width="32%" /> <img src="./docs/demo_rectangle2.jpg" width="32%" />
+  <img src="./docs/demo_rectangle1.jpg" width="37.25%" /> <img src="./docs/demo_rectangle2.jpg" width="37.25%" />
 
   
   <strong>(3) wsgi标注</strong>
