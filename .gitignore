@@ -11,3 +11,4 @@ cache/
 tools/log/
 temp
 tile_image
+__pycache__/
