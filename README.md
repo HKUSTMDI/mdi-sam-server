@@ -22,7 +22,7 @@ MDI标注平台 SAM实时识别server⚡️。
   <img src="./docs/wsgi_demo1.png" width="37.25%" />
   <img src="./docs/wsgi_demo2.png" width="37.25%" float='left'/>
   <img src="./docs/wsgi_demo3.png" width="37.25%" />
-  <img src="./docs/wsgi_demo4.png" width="32.6%" float='left'/>
+  <img src="./docs/wsgi_demo4.png" width="32.6%" />
 </p>
 
 
