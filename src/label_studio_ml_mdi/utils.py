@@ -185,14 +185,14 @@ class sdpcHanler:
             else:
                 logger.debug(f"get sdpc image[{image_info_url}]info faild,status code:[{resp.status_code}]")
                 raise Exception(f"get sdpc image[{image_info_url}]info faild,status code:[{resp.status_code}]")
-            cost_time = (time.time() - start_time) * 1000
+            cost_time = round((time.time() - start_time) * 1000,3)
             logger.info(f"request url_info cost_time:{cost_time} ms")
         else:
             logger.info("use image_info_url in cache")
             image_info = self.cache.get(image_info_url) 
         
         #计算layer位置
-        cur_scale        = context["result"][0]['value']['cur_scale']
+        cur_scale        = context['cur_scale']
         layer_size       = image_info['basisInfo']['layerSize']
         basisInfo_width  = image_info['basisInfo']['tileWidth']
         basisInfo_height = image_info['basisInfo']['tileHeight']
@@ -205,8 +205,19 @@ class sdpcHanler:
         current_layer_sliceX = current_layer_info['sliceNumX']
         current_layer_sliceY = current_layer_info['sliceNumY']
         logger.debug("current_layer_info:",current_layer_info)
-        
-        input_data  =  context['result'][0]
+
+        rectangle_data = None
+
+        #通过rectangle矩形框获取tile位置
+        for ctx in context['result']:
+            if ctx["type"] == "rectanglelabels":
+                rectangle_data = ctx
+                break
+        if rectangle_data == None:
+            logger.error("no rectangle prompt!please check")
+            raise Exception("no rectagnle prompt!")
+
+        input_data  =  rectangle_data
         point_x     = input_data['value']['x'] / 100
         point_y     = input_data['value']['y'] / 100
         box_width   = input_data['value']['width'] / 100 
@@ -245,18 +256,24 @@ class sdpcHanler:
         input_data['original_width']  = slice_width
         input_data['original_height'] = slice_height
 
+        #对prompt中的坐标进行转换:
         #x,y,width,height位置变换:在拼接的slice中，输入点相对于参考点的坐标位置
-        x_relative          = (point_x * current_layer_sliceX - layer_x_min) / slice_width_num * 100
-        y_relative          = (point_y * current_layer_sliceY - layer_y_min) / slice_height_num * 100
-        box_width_relative  = box_width * current_layer_sliceX / slice_width_num * 100
-        box_height_relative = box_height * current_layer_sliceY / slice_height_num * 100
+        for ctx in context['result']:
+            point_x_ins = ctx['value']['x'] / 100
+            point_y_ins = ctx['value']['y'] / 100
+            ctx['value']['x'] = (point_x_ins * current_layer_sliceX - layer_x_min) / slice_width_num * 100
+            ctx['value']['y'] = (point_y_ins * current_layer_sliceY - layer_y_min) / slice_height_num * 100
 
-        input_data['value']['x'] = x_relative
-        input_data['value']['y'] = y_relative
-        input_data['value']['width'] = box_width_relative
-        input_data['value']['height'] = box_height_relative
-
-        logger.debug(f"x_relative:{x_relative},y_relative:{y_relative},box_width_relative:{box_width_relative}, box_height_relative:{box_height_relative}")
+            logger.debug(f"ctx['type']:{ctx['type']}, x_relative:{ctx['value']['x']},y_relative:{ctx['value']['y']}")
+                         
+            if ctx['type'] == "rectanglelabels":
+                box_width_ins  = ctx['value']['width'] / 100
+                box_height_ins = ctx['value']['height'] / 100
+                ctx['value']['width']   = box_width_ins * current_layer_sliceX / slice_width_num * 100
+                ctx['value']['height']  = box_height_ins * current_layer_sliceY / slice_height_num * 100
+                
+                logger.debug(f"box_width_relative:{ctx['value']['width']}, box_height_relative:{ctx['value']['height']}")
+                           
 
 
     def get_layer_level(self, layerInfo, curScale):
@@ -307,8 +324,8 @@ class sdpcHanler:
         asyncio.set_event_loop(loop)
         loop.run_until_complete(process_urls())
         loop.close()
-        cost_time = (time.time() - start_time) * 1000
-        logger.info(f"download tile images cost time:{cost_time}")
+        cost_time = round((time.time() - start_time) * 1000,3)
+        logger.info(f"download tile images cost time:{cost_time}ms")
         #拼接
         slice_width  = tile_size[0] * slice_size_num[0]
         slice_height = tile_size[1] * slice_size_num[1]
