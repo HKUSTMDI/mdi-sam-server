@@ -4,7 +4,7 @@ from flask import Flask, request, jsonify
 
 from .model import LabelStudioMLBase
 from .exceptions import exception_handler
-from .utils import sdpcHanler,cost_time
+from .utils import wsiHandler,cost_time
 
 logger = logging.getLogger(__name__)
 #logger.setLevel(logging.DEBUG)
@@ -31,7 +31,7 @@ def init_app(model_class):
     logger.debug("init ok")
     return _server
 
-sdpc_handler = sdpcHanler()
+wsi_handler = wsiHandler()
 
 @_server.route('/api/predict', methods=['POST'])
 @exception_handler
@@ -59,8 +59,16 @@ def _predict():
     elif img_type == "sdpc":
         #sdpc处理tasks,context
         logger.info("convert sdpc...")
-        sdpc_handler.convert(tasks, context=context, **params)
+        wsi_handler.sdpc_convert(tasks, context=context, **params)
         predictions = model.predict(tasks, context=context, **params)
+    
+    elif img_type == "svs" or img_type == "tiff":
+        logger.info(f"convert {img_type}...")
+        wsi_handler.svs_handler(tasks, context=context, **params)
+        predictions = model.predict(tasks, context=context, **params)
+    
+    else:
+        predictions = "unkown type,please use normal/sdpc/svs/tiff file."
 
     return jsonify({'results': predictions})
 
@@ -74,14 +82,21 @@ def _setup():
     model = MODEL_CLASS(project_id)
     model.use_label_config('')
     model_version = model.get('model_version')
-    
-    model.preload(image_url)
-    
-    return jsonify({
-        'code': 200,
-        'msg': 'ok',
-        'model_version': model_version
-        })
+    img_type = data.get('img_type','normal') #图片类型,只支持normal
+
+    if img_type == "normal":
+        model.preload(image_url)
+        return jsonify({
+                'code': 200,
+                'msg': 'ok',
+                'model_version': model_version
+                })
+    else:
+        return jsonify({
+                'code': 401,
+                'msg': 'only support img_type:normal',
+                'model_version': model_version
+                })
 
 
 TRAIN_EVENTS = (
