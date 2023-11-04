@@ -19,6 +19,7 @@ import os
 import aiohttp
 import asyncio
 import time
+import hashlib
 
 from functools import wraps
 
@@ -194,8 +195,19 @@ class wsiHandler:
         """
         description:tile瓦片拼接出图片
         """
+        local_slide_exist = False
         url_layer = layer - 1
         image_url_list= []
+
+        #判断本地是否存在slice的拼接图
+        hash_name = hashlib.sha256(str(point_list).encode('utf-8')).hexdigest()
+        slice_filename = image_filename  + '_' + str(layer) + '_' + hash_name + '.jpeg'
+        local_slice_filename = os.path.join(local_storage, slice_filename)
+
+        if os.path.exists(local_slice_filename):
+            logger.info(f"local storage exist slide:{local_slice_filename}")
+            local_slide_exist = True #本地已存在该slide 
+        
         for item in point_list:
             logger.debug(f"prefix_url:{prefix_url}")
             tile_url = prefix_url + '/' + str(url_layer) + '/' + str(item[0]) + '/' + str(item[1])
@@ -244,18 +256,20 @@ class wsiHandler:
 
         slice_image = Image.new('RGB', (slice_width, slice_height), ImageColor.getrgb("white"))
         logger.debug(f"image_url_list:{image_url_list}")
-        for item, image in enumerate(image_url_list):
-            slice_x = int(item % slice_size_num[0] * tile_size[0])
-            slice_y = int(item // slice_size_num[0] * tile_size[1])
-            slice_image.paste(image["content"], (slice_x, slice_y))
-        
-        #url文件名:/data/5cf58b__CMWGTUhghiTnTpwd.jpg?d=home/mdi/.cache/label-studio;
-        #本地文件名:/home/mdi/.cache/label-studio/5cf58b__CMWGTUhghiTnTpwd.jpg
-        #保存在本地，本地文件名:原文件名+时间戳(ms)
-        slice_filename = image_filename  + "_" + str(int(time.time() * 1000)) + '.jpeg'
+
+        #本地不存在则拼接出该slide
+        if not local_slide_exist:
+            for item, image in enumerate(image_url_list):
+                slice_x = int(item % slice_size_num[0] * tile_size[0])
+                slice_y = int(item // slice_size_num[0] * tile_size[1])
+                slice_image.paste(image["content"], (slice_x, slice_y))
+            
+            #url文件名:/data/5cf58b__CMWGTUhghiTnTpwd.jpg?d=home/mdi/.cache/label-studio;
+            #本地文件名:/home/mdi/.cache/label-studio/5cf58b__CMWGTUhghiTnTpwd.jpg
+            #保存在本地，本地文件名:原文件名+时间戳(ms)
+            slice_image.save(local_slice_filename)
+
         url_slice_filename = "/data/" + slice_filename + '?d=' + local_storage
-        local_slice_filename = os.path.join(local_storage, slice_filename)
-        slice_image.save(local_slice_filename)
 
         return url_slice_filename, slice_width, slice_height
     
@@ -355,7 +369,7 @@ class wsiHandler:
                            
     def svs_handler(self, tasks:List[Dict], context: Optional[Dict] = None, **kwargs):
         """
-        Description: svs类型SAM实时识别
+        Description: svs类型SAM实时识别,兼容tiff格式图片
         """
         #获取图片信息，请求svs_tile_prefix
         image_info_url = tasks[0]['data']['image']
@@ -422,6 +436,8 @@ class wsiHandler:
                 box_point_list.append([j,i])
         
         logger.debug(f"box_point_list:{box_point_list}")
+        #检查本地是否存在瓦片图:
+
         #图片下载、拼接
         #tile_image_url:瓦片图前缀
         tile_image_url = svs_tile_imageURL + image_filename

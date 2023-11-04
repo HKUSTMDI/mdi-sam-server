@@ -13,3 +13,4 @@ temp
 tile_image
 __pycache__/
 draw_image
+cache.db
