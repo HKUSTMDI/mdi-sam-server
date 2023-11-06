@@ -44,8 +44,9 @@ class LabelStudioMLBase(ABC):
             self.set('model_version', 'INITIAL')
         if current_label_config != label_config:
             # label config has been changed
-            self.set('label_config', label_config)
-            self.set('parsed_label_config', json.dumps(parse_config(label_config)))
+            #self.set('label_config', label_config)
+            #self.set('parsed_label_config', json.dumps(parse_config(label_config)))
+            pass
 
     def get(self, key: str):
         return CACHE[self.project_id, key]

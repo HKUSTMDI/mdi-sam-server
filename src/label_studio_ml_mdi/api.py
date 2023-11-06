@@ -1,6 +1,7 @@
 import logging
 
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 
 from .model import LabelStudioMLBase
 from .exceptions import exception_handler
@@ -18,6 +19,7 @@ logger = logging.getLogger(__name__)
 
 
 _server = Flask(__name__)
+CORS(_server)
 MODEL_CLASS = LabelStudioMLBase
 
 
