@@ -292,13 +292,15 @@ class wsiHandler:
         tile_height      = image_info['basisInfo']['tileHeight']
         sliceLayerInfo   = image_info['originalInfo']['sliceLayerInfo']
         current_layer    = self.get_layer_level(sliceLayerInfo, cur_scale)
+        
         logger.debug(f"current_layer:current_layer")
         current_layer_info = sliceLayerInfo[current_layer-1]
+        layer_cur_scale  = current_layer_info['curScale']
 
         #拼接、保存图片
         current_layer_sliceX = current_layer_info['sliceNumX']
         current_layer_sliceY = current_layer_info['sliceNumY']
-        logger.debug("current_layer_info:",current_layer_info)
+        logger.info(f"current_layer_info:{current_layer_info},layer_cur_scale:{layer_cur_scale}")
         rectangle_data = None
 
         #获取rectangle prompt信息
@@ -348,9 +350,11 @@ class wsiHandler:
         tasks[0]['data']['image']     = slice_url
         input_data['original_width']  = slice_width
         input_data['original_height'] = slice_height
+        
 
         #对prompt中的坐标进行转换:
         #x,y,width,height位置变换:在拼接的slice中，输入点相对于参考点的坐标位置
+        context['layer_cur_scale'] = layer_cur_scale
         for ctx in context['result']:
             point_x_ins = ctx['value']['x'] / 100
             point_y_ins = ctx['value']['y'] / 100
@@ -388,13 +392,14 @@ class wsiHandler:
         logger.debug(f"current_layer:{current_layer}")
         
         current_layer_info = sliceLayerInfo[current_layer-1]
+        layer_cur_scale  = current_layer_info['curScale']
         #拼接、保存图片
         current_layer_sliceX = current_layer_info['sliceNumX']
         current_layer_sliceY = current_layer_info['sliceNumY']
         current_layer_width  = current_layer_info['sliceWidth']
         current_layer_height = current_layer_info['sliceHeight']
         logger.debug("current_layer_info:",current_layer_info)
-
+        
         #获取rectangle prompt信息
         rectangle_data = None
         for ctx in context['result']:
@@ -453,6 +458,7 @@ class wsiHandler:
 
         #对prompt中的坐标进行转换:
         #x,y,width,height位置变换:在拼接的slice中，输入点相对于参考点的坐标位置
+        context['layer_cur_scale'] = layer_cur_scale
         for ctx in context['result']:
             point_x_ins = ctx['value']['x'] / 100
             point_y_ins = ctx['value']['y'] / 100

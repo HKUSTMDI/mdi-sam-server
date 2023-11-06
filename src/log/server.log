@@ -1,0 +1,16 @@
+[2023-11-06 15:20:07,452] [DEBUG] [matplotlib::wrapper::337] matplotlib data path: /home/mdi/anaconda3/envs/sam_zachczhang/lib/python3.10/site-packages/matplotlib/mpl-data
+[2023-11-06 15:20:07,453] [DEBUG] [matplotlib::wrapper::337] CONFIGDIR=/home/mdi/.config/matplotlib
+[2023-11-06 15:20:07,454] [DEBUG] [matplotlib::<module>::1498] interactive is False
+[2023-11-06 15:20:07,454] [DEBUG] [matplotlib::<module>::1499] platform is linux
+[2023-11-06 15:20:07,475] [DEBUG] [matplotlib::wrapper::337] CACHEDIR=/home/mdi/.cache/matplotlib
+[2023-11-06 15:20:07,476] [DEBUG] [matplotlib.font_manager::_load_fontmanager::1574] Using fontManager instance from /home/mdi/.cache/matplotlib/fontlist-v330.json
+[2023-11-06 15:20:07,554] [DEBUG] [sam_predictor::__init__::38] Using device cuda
+[2023-11-06 15:20:07,589] [INFO] [sam_predictor::__init__::61] Using SAM checkpoint ../models/sam_vit_l_0b3195.pth
+[2023-11-06 15:20:09,329] [DEBUG] [label_studio_ml_mdi.api::init_app::33] init ok
+ * Serving Flask app 'label_studio_ml_mdi.api'
+ * Debug mode: off
+[2023-11-06 15:20:09,332] [INFO] [werkzeug::_log::187] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:9090
+ * Running on http://192.168.3.4:9090
+[2023-11-06 15:20:09,332] [INFO] [werkzeug::_log::187] [33mPress CTRL+C to quit[0m

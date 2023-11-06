@@ -22,6 +22,7 @@ class SamMLBackend(LabelStudioMLBase):
         
         image_width = context['result'][0]['original_width']
         image_height = context['result'][0]['original_height']
+        layer_cur_scale = context.get('layer_cur_scale',None)
 
         # collect context information
         point_coords = []
@@ -55,13 +56,14 @@ class SamMLBackend(LabelStudioMLBase):
             masks=predictor_results['masks'],
             probs=predictor_results['probs'],
             bbox=predictor_results['bbox'],
+            cur_scale=layer_cur_scale,
             width=image_width,
             height=image_height,
             label=selected_label)
 
         return predictions
 
-    def get_results(self, masks, probs, width, height, bbox, label):
+    def get_results(self, masks, probs, width, height, bbox, label,cur_scale):
         results = []
         for mask, prob in zip(masks, probs):
             # creates a random ID for your label everytime so no chance for errors
@@ -75,6 +77,7 @@ class SamMLBackend(LabelStudioMLBase):
                 'original_width': width,
                 'original_height': height,
                 'image_rotation': 0,
+                'layer_cur_scale':cur_scale,
                 'value': {
                     'format': 'rle',
                     'rle': rle,
