@@ -1,36 +1,28 @@
 # mdi-ml-sam
-MDI标注平台 SAM实时识别server⚡️。
-当前支持:
-- 1.🌟实时标注:多点标注，单矩形标注.
-- 2.🔥带不同positive和negative的prompt.
-- 3.🐬wsgi识别
+MDI annotation platform SAM real-time recognition server ⚡ .
+Current support:
+- (1) 🌟 Real time annotation: multi-point annotation, single rectangle annotation
+- (2) 🔥 Prompt with different positive and negative values
+- (3) 🐬 the Whole Llide Image recognition
 
+### WSI segmentation annotation
+<img src="./docs/wsi_segmentation.gif" width="75%"/>
 
+### point & rectangle模式
 <p float="left">
-  <strong>(1) point模式</strong>
   <br>
   <img src="./docs/demo_point1.jpg" width="37.25%" />
   <img src="./docs/demo_point2.jpg" width="37.25%" />
-
-  <strong>(2) rectangle模式</strong>
   <br>
   <img src="./docs/demo_rectangle1.jpg" width="37.25%" /> <img src="./docs/demo_rectangle2.jpg" width="37.25%" />
-
-  
-  <strong>(3) wsgi标注</strong>
-
-  <img src="./docs/wsgi_demo1.png" width="30%" /> <img src="./docs/wsgi_demo2.png" width="30%" />
-  
-  <img src="./docs/wsgi_demo3.png" width="30%" /> <img src="./docs/wsgi_demo4.png" width="26.5%" />
 </p>
 
-
-## 支持模型:
-  - 1.**[Meta原生SAM](https://github.com/facebookresearch/segment-anything)** (服务默认)
+### Supporting models:
+  - 1.**[Meta SAM](https://github.com/facebookresearch/segment-anything)** (default service)
   - 2.**[mobile_sam](https://github.com/ChaoningZhang/MobileSAM)**
-  - 3.**ONNX**模式
+  - 3.**ONNX** mode
 ## Installation
-本版本开发过程中的Python为3.10.12，请使用此版本或者更新的版本。
-# [接口文档](./docs/接口文档.md)
-+ 说明:请求体采用json方式，请求头中包含token进行验证 
-请求头:Content-Type:application/json;token:xxxx
+The Python used in the development process of this version is 3.10.12. Please use this version or an updated version.
+### [API Docs](./docs/接口文档.md)
++ Explanation: The request body adopts JSON mode, and the request header contains a token for verification
+Request header: Content Type: application/JSON; token:xxxx

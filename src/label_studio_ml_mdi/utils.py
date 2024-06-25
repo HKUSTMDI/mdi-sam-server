@@ -178,7 +178,6 @@ class wsiHandler:
             if resp.status_code == 200:
                 image_info = resp.json()
                 self.cache.put(image_info_url,image_info)
-                
             else:
                 logger.debug(f"get sdpc image[{image_info_url}]info faild,status code:[{resp.status_code}]")
                 raise Exception(f"get sdpc image[{image_info_url}]info faild,status code:[{resp.status_code}]")
@@ -268,7 +267,6 @@ class wsiHandler:
             #本地文件名:/home/mdi/.cache/label-studio/5cf58b__CMWGTUhghiTnTpwd.jpg
             #保存在本地，本地文件名:原文件名+时间戳(ms)
             slice_image.save(local_slice_filename)
-
         url_slice_filename = "/data/" + slice_filename + '?d=' + local_storage
 
         return url_slice_filename, slice_width, slice_height
@@ -423,14 +421,14 @@ class wsiHandler:
         layer_y_position = int(point_y * current_layer_height) #通过layer层位置计算出框坐标点的height
         #计算出rectangle坐标点瓦片位置
         layer_x_min      = layer_x_position // tile_width
-        layer_y_min      = layer_y_position // tile_height  
+        layer_y_min      = layer_y_position // tile_height
         #计算出rectangle的宽、高位置
         layer_x_max      = int((point_x + box_width) * current_layer_width // tile_width)
         layer_y_max      = int((point_y + box_height) * current_layer_height // tile_height)
 
         slice_width_num  = layer_x_max - layer_x_min + 1
         slice_height_num = layer_y_max - layer_y_min + 1
-        tile_size        = ( tile_width , tile_height)
+        tile_size        = ( tile_width , tile_height )
         slice_size_num   = ( slice_width_num, slice_height_num )
 
         logger.debug(f"layer_x_min:{layer_x_min},layer_x_max:{layer_x_max}")
@@ -491,9 +489,6 @@ class wsiHandler:
                 level += 1
                 break
         return level
-    
-
-
 
 if __name__ == "__main__":
     c = InMemoryLRUDictCache(2)
