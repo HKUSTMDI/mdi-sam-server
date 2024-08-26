@@ -31,7 +31,7 @@ logging.config.dictConfig({
 import sys
 # sys.path.append('../')
 from label_studio_ml_mdi.api import init_app
-from model import SamMLBackend
+from sam_backend.model import SamMLBackend
 
 _DEFAULT_CONFIG_PATH = os.path.join(os.path.dirname(__file__), 'config.json')
 

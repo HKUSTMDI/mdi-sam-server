@@ -12,12 +12,12 @@ import uuid
 
 logger = logging.getLogger(__name__)
 
-VITH_CHECKPOINT = os.environ.get("VITH_CHECKPOINT", "../models/sam_vit_l_0b3195.pth")
+VITH_CHECKPOINT = os.environ.get("VITH_CHECKPOINT", "./models/sam_vit_l_0b3195.pth")
 VITH_REG_KEY = os.environ.get("VITH_REG_KEY", "vit_l")
-SAM2_CHECKPOINT = os.environ.get("SAM2_CHECKPOINT", "../models/sam2_hiera_base_plus.pt")
+SAM2_CHECKPOINT = os.environ.get("SAM2_CHECKPOINT", "./models/sam2_hiera_base_plus.pt")
 SAM2_CONFIG = os.environ.get("SAM2_CONFIG", "sam2_hiera_b+.yaml")
-ONNX_CHECKPOINT = os.environ.get("ONNX_CHECKPOINT", "../models/sam_onnx_quantized_example.onnx")
-MOBILESAM_CHECKPOINT = os.environ.get("MOBILESAM_CHECKPOINT", "../models/mobile_sam.pt")
+ONNX_CHECKPOINT = os.environ.get("ONNX_CHECKPOINT", "./models/sam_onnx_quantized_example.onnx")
+MOBILESAM_CHECKPOINT = os.environ.get("MOBILESAM_CHECKPOINT", "./models/mobile_sam.pt")
 LABEL_STUDIO_ACCESS_TOKEN = os.environ.get("LABEL_STUDIO_ACCESS_TOKEN")
 LABEL_STUDIO_HOST = os.environ.get("LABEL_STUDIO_HOST")
 

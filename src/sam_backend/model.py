@@ -3,7 +3,7 @@ import os
 from label_studio_converter import brush
 from typing import List, Dict, Optional
 from uuid import uuid4
-from sam_predictor import SAMPredictor
+from sam_backend.sam_predictor import SAMPredictor
 from label_studio_ml_mdi.model import LabelStudioMLBase
 
 #SAM_CHOICE = os.environ.get("SAM_CHOICE", "MobileSAM")  # other option is just SAM
