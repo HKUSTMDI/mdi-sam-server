@@ -14,10 +14,14 @@ logger = logging.getLogger(__name__)
 
 VITH_CHECKPOINT = os.environ.get("VITH_CHECKPOINT", "../models/sam_vit_l_0b3195.pth")
 VITH_REG_KEY = os.environ.get("VITH_REG_KEY", "vit_l")
+SAM2_CHECKPOINT = os.environ.get("SAM2_CHECKPOINT", "../models/sam2_hiera_base_plus.pt")
+SAM2_CONFIG = os.environ.get("SAM2_CONFIG", "sam2_hiera_b+.yaml")
 ONNX_CHECKPOINT = os.environ.get("ONNX_CHECKPOINT", "../models/sam_onnx_quantized_example.onnx")
 MOBILESAM_CHECKPOINT = os.environ.get("MOBILESAM_CHECKPOINT", "../models/mobile_sam.pt")
 LABEL_STUDIO_ACCESS_TOKEN = os.environ.get("LABEL_STUDIO_ACCESS_TOKEN")
 LABEL_STUDIO_HOST = os.environ.get("LABEL_STUDIO_HOST")
+
+SAM_DRAW_MODE=os.environ.get("SAM_DRAW_MODE",False)
 
 
 class SAMPredictor(object):
@@ -61,6 +65,21 @@ class SAMPredictor(object):
             logger.info(f"Using SAM checkpoint {self.model_checkpoint}")
             reg_key = VITH_REG_KEY
 
+        elif model_choice == 'SAM2':
+            from sam2.build_sam import build_sam2
+            from sam2.sam2_image_predictor import SAM2ImagePredictor
+
+            self.model_checkpoint = SAM2_CHECKPOINT
+            if self.model_checkpoint is None:
+                raise FileNotFoundError("SAM2_CHECKPOINT is not set: please set it to the path to the SAM2 checkpoint")
+
+            logger.info(f"Using SAM2 checkpoint {self.model_checkpoint}")
+            model_cfg = SAM2_CONFIG
+            sam2_model = build_sam2(model_cfg, self.model_checkpoint, device=self.device)
+            
+            self.predictor = SAM2ImagePredictor(sam2_model)
+            return
+            
         elif model_choice == 'MobileSAM':
             from mobile_sam import SamPredictor, sam_model_registry
 
@@ -188,8 +207,9 @@ class SAMPredictor(object):
 
         #效果测试、画图
         points = point_coords
-        logger.debug("画图...")
-        self.show_mask(points, point_labels, mask, img_path, bbox= input_box )
+        if SAM_DRAW_MODE:
+            logger.debug("画图...")
+            self.show_mask(points, point_labels, mask, img_path, bbox= input_box)
 
         #计算轮廓
         logger.debug("计算外接轮廓...")
@@ -219,7 +239,7 @@ class SAMPredictor(object):
     ):
         if self.model_choice == 'ONNX':
             return self.predict_onnx(img_path, point_coords, point_labels, input_box)
-        elif self.model_choice in ('SAM', 'MobileSAM'):
+        elif self.model_choice in ('SAM', 'MobileSAM','SAM2'):
             return self.predict_sam(img_path, point_coords, point_labels, input_box)
         else:
             raise NotImplementedError(f"Model choice {self.model_choice} is not supported yet")
