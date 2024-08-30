@@ -7,17 +7,19 @@
 <img src="./docs/architecture.jpg" width="100%">
 
 MDI annotation platform [SAM1](https://github.com/facebookresearch/segment-anything) &  [SAM2](https://github.com/facebookresearch/segment-anything-2) (and other SAM Family models) real-time recognition server ⚡ . You can use this server to generate the mask of image that you post with points (negative, positive), box, or both. You can install the server as **label studio** machine learning backend.The service references open source projects like [Label-Studio](https://github.com/HumanSignal/label-studio), [playgroud](https://github.com/open-mmlab/playground/tree/main), [SAM](https://github.com/facebookresearch/segment-anything-2).
-**Current support:**
+
+**Currently support:**
+
 - (1) Real time annotation: multi-point annotation, single rectangle annotation
 - (2) Prompt with different positive and negative values
 - (3) the Whole Slide Image recognition
 
 
 ### WSI segmentation annotation
+
 <img src="./docs/wsi_segmentation.gif" width="75%"/>
 
 ### point & rectangle模式
-
 
 <p float="left">
   <br>
@@ -40,7 +42,9 @@ The Python used in the development process of this version is 3.10. Please use t
 ```shell
 pip install -e .
 ```
+
 ### How to run
+
 - Use server command
 ```shell
 SAM_CHOICE=SAM2 \
