@@ -3,8 +3,8 @@ import os
 from label_studio_converter import brush
 from typing import List, Dict, Optional
 from uuid import uuid4
-from sam_backend.sam_predictor import SAMPredictor
-from label_studio_ml_mdi.model import LabelStudioMLBase
+from .sam_predictor import SAMPredictor
+from mdi_sam_server.label_studio_ml_mdi.model import LabelStudioMLBase
 
 #SAM_CHOICE = os.environ.get("SAM_CHOICE", "MobileSAM")  # other option is just SAM
 SAM_CHOICE = os.environ.get("SAM_CHOICE", "SAM")  # other option is just SAM
@@ -17,7 +17,7 @@ class SamMLBackend(LabelStudioMLBase):
         """ Returns the predicted mask for a smart keypoint that has been placed."""
 
         if not context or not context.get('result'):
-            # if there is no context, no interaction has happened yet
+            # if there is no context, no interaction has happened yet/home/mdi/zhangcheng-dev/mdi-sam/sam_server/sam_backend
             return []
         
         image_width = context['result'][0]['original_width']

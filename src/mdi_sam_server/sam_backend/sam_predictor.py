@@ -5,19 +5,19 @@ import cv2
 import numpy as np
 
 from typing import List, Dict, Optional
-from label_studio_ml.utils import get_image_local_path, InMemoryLRUDictCache
+from mdi_sam_server.label_studio_ml_mdi.utils import get_image_local_path, InMemoryLRUDictCache
 
 import matplotlib.pyplot as plt
 import uuid
 
 logger = logging.getLogger(__name__)
 
-VITH_CHECKPOINT = os.environ.get("VITH_CHECKPOINT", "./models/sam_vit_l_0b3195.pth")
+VITH_CHECKPOINT = os.environ.get("VITH_CHECKPOINT", "../../models/sam_vit_l_0b3195.pth")
 VITH_REG_KEY = os.environ.get("VITH_REG_KEY", "vit_l")
-SAM2_CHECKPOINT = os.environ.get("SAM2_CHECKPOINT", "./models/sam2_hiera_base_plus.pt")
+SAM2_CHECKPOINT = os.environ.get("SAM2_CHECKPOINT", "../../models/sam2_hiera_base_plus.pt")
 SAM2_CONFIG = os.environ.get("SAM2_CONFIG", "sam2_hiera_b+.yaml")
-ONNX_CHECKPOINT = os.environ.get("ONNX_CHECKPOINT", "./models/sam_onnx_quantized_example.onnx")
-MOBILESAM_CHECKPOINT = os.environ.get("MOBILESAM_CHECKPOINT", "./models/mobile_sam.pt")
+ONNX_CHECKPOINT = os.environ.get("ONNX_CHECKPOINT", "../../models/sam_onnx_quantized_example.onnx")
+MOBILESAM_CHECKPOINT = os.environ.get("MOBILESAM_CHECKPOINT", "../../models/mobile_sam.pt")
 LABEL_STUDIO_ACCESS_TOKEN = os.environ.get("LABEL_STUDIO_ACCESS_TOKEN")
 LABEL_STUDIO_HOST = os.environ.get("LABEL_STUDIO_HOST")
 
@@ -104,12 +104,13 @@ class SAMPredictor(object):
         print("payload:",payload)
         if payload is None:
             # Get image and embeddings
-            logger.debug(f'Payload not found for {img_path} in `IN_MEM_CACHE`: calculating from scratch')
+            logger.info(f'Payload not found for {img_path} in `IN_MEM_CACHE`: calculating from scratch')
             image_path = get_image_local_path(
                 img_path,
                 label_studio_access_token=LABEL_STUDIO_ACCESS_TOKEN,
                 label_studio_host=LABEL_STUDIO_HOST
             )
+            logger.info(f"image_path:{image_path}")
             image = cv2.imread(image_path)
             image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
             self.predictor.set_image(image)
@@ -205,17 +206,17 @@ class SAMPredictor(object):
         )
         mask = masks[0].astype(np.uint8)  # each mask has shape [H, W]
 
-        #效果测试、画图
+        # test the result, and draw the mask on image
         points = point_coords
         if SAM_DRAW_MODE:
-            logger.debug("画图...")
+            logger.debug("drawing...")
             self.show_mask(points, point_labels, mask, img_path, bbox= input_box)
 
-        #计算轮廓
-        logger.debug("计算外接轮廓...")
+        # 计算轮廓
+        logger.debug("Calculate the external profile")
         contours, hierarchy = cv2.findContours(
             mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        #计算外接矩形
+        # 计算外接矩形
         new_contours = []
         for contour in contours:
             new_contours.extend(list(contour))
@@ -287,10 +288,10 @@ class SAMPredictor(object):
         plt.imshow(mask_image_ins)
         #plt.axis('off')
         
-        if not os.path.exists('./draw_image/'):
-            os.mkdir('./draw_image/')
+        if not os.path.exists('../draw_image/'):
+            os.mkdir('../draw_image/')
 
-        plt.savefig(f"./draw_image/mask_{id}")
+        plt.savefig(f"../draw_image/mask_{id}")
 
 
 

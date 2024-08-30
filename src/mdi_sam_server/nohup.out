@@ -1,0 +1,74 @@
+[2024-08-29 13:57:03,445] [DEBUG] [matplotlib::wrapper::337] matplotlib data path: /home/mdi/anaconda3/envs/sam_zachczhang/lib/python3.10/site-packages/matplotlib/mpl-data
+[2024-08-29 13:57:03,447] [DEBUG] [matplotlib::wrapper::337] CONFIGDIR=/home/mdi/.config/matplotlib
+[2024-08-29 13:57:03,448] [DEBUG] [matplotlib::<module>::1498] interactive is False
+[2024-08-29 13:57:03,448] [DEBUG] [matplotlib::<module>::1499] platform is linux
+[2024-08-29 13:57:03,467] [DEBUG] [matplotlib::wrapper::337] CACHEDIR=/home/mdi/.cache/matplotlib
+[2024-08-29 13:57:03,468] [DEBUG] [matplotlib.font_manager::_load_fontmanager::1574] Using fontManager instance from /home/mdi/.cache/matplotlib/fontlist-v330.json
+[2024-08-29 13:57:03,578] [DEBUG] [sam_backend.sam_predictor::__init__::42] Using device cuda
+[2024-08-29 13:57:03,618] [DEBUG] [hydra.core.utils::set::279] Setting JobRuntime:name=UNKNOWN_NAME
+[2024-08-29 13:57:03,619] [DEBUG] [hydra.core.utils::set::279] Setting JobRuntime:name=app
+[2024-08-29 13:57:03,942] [INFO] [sam_backend.sam_predictor::__init__::76] Using SAM2 checkpoint ../models/sam2_hiera_base_plus.pt
+Traceback (most recent call last):
+  File "/home/mdi/zhangcheng-dev/mdi-sam-server/src/mdi_sam_server/cli.py", line 34, in <module>
+    from sam_backend.model import SamMLBackend
+  File "/home/mdi/zhangcheng-dev/mdi-sam-server/src/mdi_sam_server/sam_backend/__init__.py", line 1, in <module>
+    from .model import SamMLBackend
+  File "/home/mdi/zhangcheng-dev/mdi-sam-server/src/mdi_sam_server/sam_backend/model.py", line 11, in <module>
+    PREDICTOR = SAMPredictor(SAM_CHOICE)
+  File "/home/mdi/zhangcheng-dev/mdi-sam-server/src/mdi_sam_server/sam_backend/sam_predictor.py", line 78, in __init__
+    sam2_model = build_sam2(model_cfg, self.model_checkpoint, device=self.device)
+  File "/home/mdi/zhangcheng-dev/segment-anything-2/sam2/build_sam.py", line 37, in build_sam2
+    _load_checkpoint(model, ckpt_path)
+  File "/home/mdi/zhangcheng-dev/segment-anything-2/sam2/build_sam.py", line 121, in _load_checkpoint
+    sd = torch.load(ckpt_path, map_location="cpu")["model"]
+  File "/home/mdi/anaconda3/envs/sam_zachczhang/lib/python3.10/site-packages/torch/serialization.py", line 1065, in load
+    with _open_file_like(f, 'rb') as opened_file:
+  File "/home/mdi/anaconda3/envs/sam_zachczhang/lib/python3.10/site-packages/torch/serialization.py", line 468, in _open_file_like
+    return _open_file(name_or_buffer, mode)
+  File "/home/mdi/anaconda3/envs/sam_zachczhang/lib/python3.10/site-packages/torch/serialization.py", line 449, in __init__
+    super().__init__(open(name, mode))
+FileNotFoundError: [Errno 2] No such file or directory: '../models/sam2_hiera_base_plus.pt'
+[2024-08-29 14:00:22,758] [DEBUG] [matplotlib::wrapper::337] matplotlib data path: /home/mdi/anaconda3/envs/sam_zachczhang/lib/python3.10/site-packages/matplotlib/mpl-data
+[2024-08-29 14:00:22,761] [DEBUG] [matplotlib::wrapper::337] CONFIGDIR=/home/mdi/.config/matplotlib
+[2024-08-29 14:00:22,761] [DEBUG] [matplotlib::<module>::1498] interactive is False
+[2024-08-29 14:00:22,761] [DEBUG] [matplotlib::<module>::1499] platform is linux
+[2024-08-29 14:00:22,780] [DEBUG] [matplotlib::wrapper::337] CACHEDIR=/home/mdi/.cache/matplotlib
+[2024-08-29 14:00:22,781] [DEBUG] [matplotlib.font_manager::_load_fontmanager::1574] Using fontManager instance from /home/mdi/.cache/matplotlib/fontlist-v330.json
+[2024-08-29 14:00:22,891] [DEBUG] [sam_backend.sam_predictor::__init__::42] Using device cuda
+[2024-08-29 14:00:22,931] [DEBUG] [hydra.core.utils::set::279] Setting JobRuntime:name=UNKNOWN_NAME
+[2024-08-29 14:00:22,931] [DEBUG] [hydra.core.utils::set::279] Setting JobRuntime:name=app
+[2024-08-29 14:00:23,249] [INFO] [sam_backend.sam_predictor::__init__::76] Using SAM2 checkpoint ../../models/sam2_hiera_base_plus.pt
+Traceback (most recent call last):
+  File "/home/mdi/zhangcheng-dev/mdi-sam-server/src/mdi_sam_server/cli.py", line 34, in <module>
+    from sam_backend.model import SamMLBackend
+  File "/home/mdi/zhangcheng-dev/mdi-sam-server/src/mdi_sam_server/sam_backend/__init__.py", line 1, in <module>
+    from .model import SamMLBackend
+  File "/home/mdi/zhangcheng-dev/mdi-sam-server/src/mdi_sam_server/sam_backend/model.py", line 11, in <module>
+    PREDICTOR = SAMPredictor(SAM_CHOICE)
+  File "/home/mdi/zhangcheng-dev/mdi-sam-server/src/mdi_sam_server/sam_backend/sam_predictor.py", line 78, in __init__
+    sam2_model = build_sam2(model_cfg, self.model_checkpoint, device=self.device)
+  File "/home/mdi/zhangcheng-dev/segment-anything-2/sam2/build_sam.py", line 36, in build_sam2
+    model = instantiate(cfg.model, _recursive_=True)
+  File "/home/mdi/anaconda3/envs/sam_zachczhang/lib/python3.10/site-packages/hydra/_internal/instantiate/_instantiate2.py", line 226, in instantiate
+    return instantiate_node(
+  File "/home/mdi/anaconda3/envs/sam_zachczhang/lib/python3.10/site-packages/hydra/_internal/instantiate/_instantiate2.py", line 342, in instantiate_node
+    value = instantiate_node(
+  File "/home/mdi/anaconda3/envs/sam_zachczhang/lib/python3.10/site-packages/hydra/_internal/instantiate/_instantiate2.py", line 342, in instantiate_node
+    value = instantiate_node(
+  File "/home/mdi/anaconda3/envs/sam_zachczhang/lib/python3.10/site-packages/hydra/_internal/instantiate/_instantiate2.py", line 347, in instantiate_node
+    return _call_target(_target_, partial, args, kwargs, full_key)
+  File "/home/mdi/anaconda3/envs/sam_zachczhang/lib/python3.10/site-packages/hydra/_internal/instantiate/_instantiate2.py", line 92, in _call_target
+    return _target_(*args, **kwargs)
+  File "/home/mdi/zhangcheng-dev/segment-anything-2/sam2/modeling/backbones/hieradet.py", line 247, in __init__
+    block = MultiScaleBlock(
+  File "/home/mdi/zhangcheng-dev/segment-anything-2/sam2/modeling/backbones/hieradet.py", line 112, in __init__
+    self.attn = MultiScaleAttention(
+  File "/home/mdi/zhangcheng-dev/segment-anything-2/sam2/modeling/backbones/hieradet.py", line 51, in __init__
+    self.qkv = nn.Linear(dim, dim_out * 3)
+  File "/home/mdi/anaconda3/envs/sam_zachczhang/lib/python3.10/site-packages/torch/nn/modules/linear.py", line 104, in __init__
+    self.reset_parameters()
+  File "/home/mdi/anaconda3/envs/sam_zachczhang/lib/python3.10/site-packages/torch/nn/modules/linear.py", line 110, in reset_parameters
+    init.kaiming_uniform_(self.weight, a=math.sqrt(5))
+  File "/home/mdi/anaconda3/envs/sam_zachczhang/lib/python3.10/site-packages/torch/nn/init.py", line 460, in kaiming_uniform_
+    return tensor.uniform_(-bound, bound, generator=generator)
+KeyboardInterrupt

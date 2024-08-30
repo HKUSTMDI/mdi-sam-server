@@ -14,13 +14,13 @@ logging.config.dictConfig({
   "handlers": {
     "console": {
       "class": "logging.StreamHandler",
-      "level": os.getenv('LOG_LEVEL', 'DEBUG'),
+      "level": os.getenv('LOG_LEVEL', 'INFO'),
       "stream": "ext://sys.stdout",
       "formatter": "standard"
     }
   },
   "root": {
-    "level": os.getenv('LOG_LEVEL', 'DEBUG'),
+    "level": os.getenv('LOG_LEVEL', 'INFO'),
     "handlers": [
       "console"
     ],
@@ -29,9 +29,8 @@ logging.config.dictConfig({
 })
 
 import sys
-# sys.path.append('../')
-from label_studio_ml_mdi.api import init_app
-from sam_backend.model import SamMLBackend
+from mdi_sam_server.label_studio_ml_mdi.api import init_app
+from mdi_sam_server.sam_backend.model import SamMLBackend
 
 _DEFAULT_CONFIG_PATH = os.path.join(os.path.dirname(__file__), 'config.json')
 
@@ -45,34 +44,43 @@ def get_kwargs_from_config(config_path=_DEFAULT_CONFIG_PATH):
     return config
 
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Label studio')
-    parser.add_argument(
+def main():
+    parser = argparse.ArgumentParser(description='MDI sam server')
+    subparsers = parser.add_subparsers(title='subcommands', description='command is all you need', help='', dest='command')
+    parser_run = subparsers.add_parser('run', help='Run the server')
+    
+    parser_run.add_argument(
         '-p', '--port', dest='port', type=int, default=9090,
         help='Server port')
-    parser.add_argument(
+    parser_run.add_argument(
         '--host', dest='host', type=str, default='0.0.0.0',
         help='Server host')
-    parser.add_argument(
+    parser_run.add_argument(
         '--kwargs', '--with', dest='kwargs', metavar='KEY=VAL', nargs='+', type=lambda kv: kv.split('='),
         help='Additional LabelStudioMLBase model initialization kwargs')
-    parser.add_argument(
+    parser_run.add_argument(
         '-d', '--debug', dest='debug', action='store_true',
         help='Switch debug mode')
-    parser.add_argument(
+    parser_run.add_argument(
         '--log-level', dest='log_level', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR'], default=None,
         help='Logging level')
-    parser.add_argument(
+    parser_run.add_argument(
         '--model-dir', dest='model_dir', default=os.path.dirname(__file__),
         help='Directory where models are stored (relative to the project directory)')
-    parser.add_argument(
+    parser_run.add_argument(
         '--check', dest='check', action='store_true',
         help='Validate model instance before launching server')
-    parser.add_argument(
+    parser_run.add_argument(
         '--draw-image', dest='draw-image', action='store_true',
         help='draw image and store in ./test_image')
 
     args = parser.parse_args()
+
+    if args.command == 'run':
+        pass
+    else:
+        parser.print_help()
+        exit
 
     # setup logging level
     if args.log_level:
@@ -112,7 +120,9 @@ if __name__ == "__main__":
     app = init_app(model_class=SamMLBackend)
 
     app.run(host=args.host, port=args.port, debug=args.debug)
-
+    
+if __name__ == "__main__":
+   main()
 else:
     # for uWSGI use
     app = init_app(model_class=SamMLBackend)

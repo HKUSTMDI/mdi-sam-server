@@ -7,7 +7,7 @@ from label_studio_tools.core.utils.params import get_env
 from label_studio_tools.core.utils.io import get_local_path
 
 from typing import List, Dict, Optional
-from .conf.settings import *
+from .conf.settings import CONFIG
 import requests
 import math
 import re
@@ -107,7 +107,8 @@ def get_image_size(filepath):
 @cost_time
 async def download_image(session, image):
     url = image['tile_url']
-    max_retry = download_retry  # 最大重试次数
+    print("max_retry:",CONFIG.download_retry)
+    max_retry = int(CONFIG.download_retry)
     retry_count = 0
 
     while retry_count < max_retry:
@@ -201,7 +202,7 @@ class wsiHandler:
         #判断本地是否存在slice的拼接图
         hash_name = hashlib.sha256(str(point_list).encode('utf-8')).hexdigest()
         slice_filename = image_filename  + '_' + str(layer) + '_' + hash_name + '.jpeg'
-        local_slice_filename = os.path.join(local_storage, slice_filename)
+        local_slice_filename = os.path.join(CONFIG.local_storage, slice_filename)
 
         if os.path.exists(local_slice_filename):
             logger.info(f"local storage exist slide:{local_slice_filename}")
@@ -267,7 +268,7 @@ class wsiHandler:
             #本地文件名:/home/mdi/.cache/label-studio/5cf58b__CMWGTUhghiTnTpwd.jpg
             #保存在本地，本地文件名:原文件名+时间戳(ms)
             slice_image.save(local_slice_filename)
-        url_slice_filename = "/data/" + slice_filename + '?d=' + local_storage
+        url_slice_filename = "/data/" + slice_filename + '?d=' + CONFIG.local_storage
 
         return url_slice_filename, slice_width, slice_height
     
@@ -276,9 +277,9 @@ class wsiHandler:
         """
         Description: sdpc实时sam识别
         """
-        #获取图片信息，请求sdpc_tile_prefix
+        #获取图片信息，请求CONFIG.sdpc_tile_prefix
         image_info_url = tasks[0]['data']['image']
-        pattern = re.escape(sdpc_tile_prefix)
+        pattern = re.escape(CONFIG.sdpc_tile_prefix)
         image_filename = re.sub(pattern, '', image_info_url)
 
         #获取wsi信息
@@ -339,7 +340,7 @@ class wsiHandler:
         logger.debug(f"box_point_list:{box_point_list}")
         #图片下载、拼接
         #tile_image_url:瓦片图前缀
-        tile_image_url = sdpc_tile_imageURL + image_filename
+        tile_image_url = CONFIG.sdpc_tile_imageURL + image_filename
         #判断图片收集否存在(优化)
         slice_url, slice_width, slice_height = self.create_image(tile_size, slice_size_num, current_layer, 
                                       box_point_list, tile_image_url, image_filename)
@@ -375,7 +376,7 @@ class wsiHandler:
         """
         #获取图片信息，请求svs_tile_prefix
         image_info_url = tasks[0]['data']['image']
-        pattern = re.escape(svs_tile_prefix)
+        pattern = re.escape(CONFIG.svs_tile_prefix)
         image_filename = re.sub(pattern, '', image_info_url)
         #wsi信息
         image_info = self.get_cache_urlInfo(image_info_url)
@@ -443,7 +444,7 @@ class wsiHandler:
 
         #图片下载、拼接
         #tile_image_url:瓦片图前缀
-        tile_image_url = svs_tile_imageURL + image_filename
+        tile_image_url = CONFIG.svs_tile_imageURL + image_filename
 
         #判断图片收集否存在(优化)
         slice_url, slice_width, slice_height = self.create_image(tile_size, slice_size_num, current_layer, 

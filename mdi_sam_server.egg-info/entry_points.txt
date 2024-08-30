@@ -1,0 +1,2 @@
+[console_scripts]
+mdi_sam_server = mdi_sam_server.cli:main

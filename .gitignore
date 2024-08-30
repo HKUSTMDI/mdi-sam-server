@@ -1,10 +1,15 @@
+.vscode/
+.DS_Store
 __pycache__/
 *.py[cod]
-
+_C.*
+*.pt
+*.pth
 src/models/*
 src/sam_backend/cache.db
 src/sam_backend/test_image
 src/sam_backend/draw_image/*
+!download_ckpts.sh
 
 cache/
 .pytest_cache/
