@@ -11,6 +11,8 @@ src/sam_backend/test_image
 src/sam_backend/draw_image/*
 !download_ckpts.sh
 
+.env
+
 cache/
 .pytest_cache/
 tools/log/
@@ -21,3 +23,4 @@ draw_image
 cache.db
 src/log/
 *-info
+build/
