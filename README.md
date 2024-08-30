@@ -43,9 +43,24 @@ The Python used in the development process of this version is 3.10. Please use t
 pip install -e .
 ```
 
-### How to run
+### How to use
+- .env file
+Please pay attention to .env file if you can't run the server.
+```shell
+#!/bin/bash
+# if you wan't to predict WSI file, please fill in the blank variables.
+SAM_CHOICE=SAM2
+SDPC_TILE_PREFIX=  
+SDPC_TILE_IMAGEURL=
+SVS_TILE_PREFIX=
+SVS_TILE_IMAGEURL=
+LOCAL_TILE_URL="./tiles" 
+DOWNLOAD_RETRY="3"
+LOCAL_STORAGE="~/.cache/label-studio/"
+TEST_TILE_STORAGE="../tile_image/"
+```
 
-- Use server command
+- Use server command, `please run pip install -e .`
 ```shell
 SAM_CHOICE=SAM2 \
 SAM2_CHECKPOINT=./models/sam2_hiera_base_plus.pt \
