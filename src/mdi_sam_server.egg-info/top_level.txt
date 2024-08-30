@@ -1,2 +1,0 @@
-cli
-mdi_sam_server

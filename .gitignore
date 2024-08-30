@@ -20,3 +20,4 @@ __pycache__/
 draw_image
 cache.db
 src/log/
+*-info
