@@ -4,7 +4,7 @@
 
 [Cheng ZHANG](https://zachczhang.github.io/)
 
-<img src="https://mdi.hkust-gz.edu.cn/images/data-manager/architecture.jpg" width="100%">
+![architechture](https://mdi.hkust-gz.edu.cn/images/data-manager/architecture.jpg)
 
 MDI annotation platform [SAM1](https://github.com/facebookresearch/segment-anything) &  [SAM2](https://github.com/facebookresearch/segment-anything-2) (and other SAM Family models) real-time recognition server ⚡ . You can use this server to generate the mask of image that you post with points (negative, positive), box, or both. You can install the server as **label studio** machine learning backend.
 
