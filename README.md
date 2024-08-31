@@ -4,7 +4,7 @@
 
 [Cheng ZHANG](https://zachczhang.github.io/)
 
-![architechture](https://mdi.hkust-gz.edu.cn/images/data-manager/architecture.jpg)
+![architechture](./docs/architecture.jpg)
 
 MDI annotation platform [SAM1](https://github.com/facebookresearch/segment-anything) &  [SAM2](https://github.com/facebookresearch/segment-anything-2) (and other SAM Family models) real-time recognition server ⚡ . You can use this server to generate the mask of image that you post with points (negative, positive), box, or both. You can install the server as **label studio** machine learning backend.
 
@@ -18,16 +18,16 @@ MDI annotation platform [SAM1](https://github.com/facebookresearch/segment-anyth
 
 ### WSI segmentation annotation
 
-<img src="https://mdi.hkust-gz.edu.cn/images/data-manager/wsi_segmentation.gif" width="75%"/>
+<img src="./docs/wsi_segmentation.gif" width="75%"/>
 
 ### point & rectangle模式
 
 <p float="left">
   <br>
-  <img src="https://mdi.hkust-gz.edu.cn/images/data-manager/demo_point1.jpg" width="37.25%" />
-  <img src="https://mdi.hkust-gz.edu.cn/images/data-manager/demo_point2.jpg" width="37.25%" />
+  <img src="./docs/demo_point1.jpg" width="37.25%" />
+  <img src="./docs/demo_point2.jpg" width="37.25%" />
   <br>
-  <img src="https://mdi.hkust-gz.edu.cn/images/data-manager/demo_rectangle1.jpg" width="37.25%" /> <img src="https://mdi.hkust-gz.edu.cn/images/data-manager/demo_rectangle2.jpg" width="37.25%" />
+  <img src="./docs/demo_rectangle1.jpg" width="37.25%" /> <img src="./docs/demo_rectangle2.jpg" width="37.25%" />
 </p>
 
 ### Supporting models:
