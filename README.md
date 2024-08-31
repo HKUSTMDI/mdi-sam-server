@@ -41,7 +41,11 @@ MDI annotation platform [SAM1](https://github.com/facebookresearch/segment-anyth
 
 The Python used in the development process of this version is 3.10. Please use this version or an updated version.
 ```shell
+# install the package
 pip install -e .
+
+# init .env and download models
+sh init.sh
 ```
 
 ### How to use
@@ -71,15 +75,16 @@ TEST_TILE_STORAGE="../tile_image/"
 #...
 
 SAM_CHOICE=SAM2 \
-SAM2_CHECKPOINT=./models/sam2_hiera_base_plus.pt \
-SAM2_CONFIG=sam2_hiera_b+.yaml  \
-mdi_sam_server run --port 9011 --log-level INFO --env-path /home/mdi/zhangcheng-dev/mdi-sam-server/.env
+  SAM2_CHECKPOINT=./models/sam2_hiera_base_plus.pt \
+  SAM2_CONFIG=sam2_hiera_b+.yaml  \
+  mdi_sam_server run --port 9011 --log-level INFO --env-path /home/mdi/zhangcheng-dev/mdi-sam-server/.env
 
 ```
 
 - Use shell
 ```shell
 cd src/
+
 SAM_DRAW_MODE=true \
 SAM_CHOICE=SAM2 \
 SAM2_CHECKPOINT=../models/sam2_hiera_large.pt \
