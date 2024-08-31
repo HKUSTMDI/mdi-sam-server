@@ -107,7 +107,7 @@ This project is released under the [Apache-2.0 license](./LICENSE)
 
 ## Acknowledgement
 
-We extend my heartfelt thanks to the developers and contributors of [Label-Studio](https://github.com/HumanSignal/label-studio), [playgroud](https://github.com/open-mmlab/playground/tree/main), [SAM](https://github.com/facebookresearch/segment-anything-2).
+We extend our heartfelt thanks to the developers and contributors of [Label-Studio](https://github.com/HumanSignal/label-studio), [playgroud](https://github.com/open-mmlab/playground/tree/main), [SAM](https://github.com/facebookresearch/segment-anything-2).
 
 ## Citation
 
