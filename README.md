@@ -51,9 +51,10 @@ sh init.sh
 ### How to use
 - .env file
 Please pay attention to .env file if you can't run the server.
+
 ```shell
 #!/bin/bash
-# if you wan't to predict WSI file, please fill in the blank variables.
+# if you want to predict WSI file, please fill in the blank variables.
 SAM_CHOICE=SAM2
 SDPC_TILE_PREFIX=  
 SDPC_TILE_IMAGEURL=
@@ -65,7 +66,7 @@ LOCAL_STORAGE="~/.cache/label-studio/"
 TEST_TILE_STORAGE="./tile_image/"
 ```
 
-- Use server command, please `run pip install -e .`  firstly.
+- Using server command, please `run pip install -e .`  firstly.
 ```shell
 # variables explanation:
 # SAM_CHOICE: SAM model type chioce
@@ -85,13 +86,15 @@ SAM_CHOICE=SAM2 \
 ```shell
 # variables:
 # SAM_DRAW_MODE: draw the image in ${TEST_TILE_STORAGE}
+# if you don't want use draw mode, set SAM_DRAW_MODE=""
+
 cd src/
 
 SAM_DRAW_MODE=true \
-SAM_CHOICE=SAM2 \
-SAM2_CHECKPOINT=../models/sam2_hiera_large.pt \
-SAM2_CONFIG=sam2_hiera_l.yaml \
-python run_server.py run  --port 9014 --log-level INFO --env-path
+  SAM_CHOICE=SAM2 \
+  SAM2_CHECKPOINT=../models/sam2_hiera_large.pt \
+  SAM2_CONFIG=sam2_hiera_l.yaml \
+  python run_server.py run  --port 9014 --log-level INFO --env-path
 ```
 
 ### [API Docs](./docs/api.md)
@@ -114,7 +117,7 @@ We extend our heartfelt thanks to the developers and contributors of [Label-Stud
 If you use this software in your research, please cite it as below:
 ```
 @misc{mdi-sam-server,
-  year = {2023-2024}
+  year = {2024}
   author = {Cheng ZHANG},
   publisher = {Github},
   journal = {Github repository},
