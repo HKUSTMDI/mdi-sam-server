@@ -62,12 +62,12 @@ SVS_TILE_IMAGEURL=
 LOCAL_TILE_URL="./tiles" 
 DOWNLOAD_RETRY="3"
 LOCAL_STORAGE="~/.cache/label-studio/"
-TEST_TILE_STORAGE="../tile_image/"
+TEST_TILE_STORAGE="./tile_image/"
 ```
 
 - Use server command, please `run pip install -e .`  firstly.
 ```shell
-# Parameter explanation:
+# variables explanation:
 # SAM_CHOICE: SAM model type chioce
 # SAM2_CHECKPOINT: SAM model checkpoint
 # SAM2_CONFIG: SAM2 config
@@ -83,6 +83,8 @@ SAM_CHOICE=SAM2 \
 
 - Use shell
 ```shell
+# variables:
+# SAM_DRAW_MODE: draw the image in ${TEST_TILE_STORAGE}
 cd src/
 
 SAM_DRAW_MODE=true \

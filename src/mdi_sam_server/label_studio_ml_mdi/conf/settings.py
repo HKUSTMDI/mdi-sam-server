@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 import os
 from pydantic import BaseSettings, Field
+import logging
 
 load_dotenv()
 # sdpc_tile_prefix = os.getenv("SDPC_TILE_PREFIX") #sdpc信息获取
@@ -11,7 +12,7 @@ load_dotenv()
 # local_storage  = os.getenv("LOCAL_STORAGE") #sam实时识别预存地址,如果没有该地址请创建
 # test_tile_storage = os.getenv("TEST_TILE_STORAGE")
 
-
+logger = logging.getLogger(__name__)
 class Settings(BaseSettings):
     sdpc_tile_prefix: str = os.getenv("SDPC_TILE_PREFIX") 
     sdpc_tile_imageURL: str = os.getenv("SDPC_TILE_IMAGEURL")
@@ -22,4 +23,4 @@ class Settings(BaseSettings):
     test_tile_storage: str = os.getenv("TEST_TILE_STORAGE")
     
 CONFIG = Settings()
-print("CONFIG:",CONFIG)
+logger.debug(f"CONFIG:{CONFIG}")
