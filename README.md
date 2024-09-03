@@ -16,9 +16,12 @@ MDI annotation platform [SAM1](https://github.com/facebookresearch/segment-anyth
 
 ## 
 
-### WSI segmentation annotation
+### WSI (the whole slide image) segmentation annotation
 
-<img src="./docs/wsi_segmentation.gif" width="75%"/>
+<div>
+<img src="./docs/demo1.gif" width="50%"/><img src="./docs/demo2.gif" width="50%"/>
+</div>
+
 
 ### point & rectangle模式
 
